@@ -23,7 +23,7 @@
 This repo includes various usage examples, including:
 
 * Authenticating with OAuth and Request for the access Token [MimoRestClient.request_oauth_token]
-* Searching USer [MimoRestClient.search]
+* Searching User [MimoRestClient.search]
 * Transfer Amount [MimoRestClient.transfer_funds_endpoint]
 
 ## Methods
