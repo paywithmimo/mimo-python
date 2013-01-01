@@ -43,7 +43,7 @@ Mimo's API with OAuth 2.0 standard
 import requests
 from requests.auth import HTTPBasicAuth
 
-__title__ = 'MimoOauth'
+__title__ = 'MimoRestClient'
 __version__ = '1.0.0'
 
 
@@ -53,6 +53,17 @@ import urllib
 from urllib import urlencode
 
 class MimoRestClient:
+    """MimoRestClient class used to support various MIMO Payment API.
+
+    In order to use this class MIMO should have created client_id and client_secret key. This class
+    provided various method supported by the MIMO Payment Gateway.It uses JSON API to parse the API.
+
+    Attributes:
+        self: Current class.
+        client_id: An string client id provided by MIMO Payment Gateway.
+        client_secret: An string client secret key provided by MIMO Payment Gateway.
+        client_url: An string MIMO Payment Gateway url.
+    """
     def __init__(self, client_id, client_secret, client_url, 
                  authentication_url="/oauth/v2/authenticate",
                  token_url="/oauth/v2/token", 
@@ -61,7 +72,8 @@ class MimoRestClient:
                  refund_url="/partner/refunds",
                  void_endpoint_url="/partner/transfers/void",
                  encoding="utf-8", **kwargs):
-
+        """Inits SampleClass with client_id,client_secret,client_url and various 
+           URL used for MIMO API."""
         self.client_id = client_id
         self.client_secret = client_secret
         self.client_url = client_url
@@ -85,9 +97,11 @@ class MimoRestClient:
         self.session.auth = self.auth_params
 
     def get_session_cookies_dict(self):
+        """Performs operation of reading the session cookies."""
         return requests.utils.dict_from_cookiejar(self.session.cookies)
 
     def set_cookies(self, cookie_dict):
+        """Performs operation of setting cookie data."""
         for k,v in cookie_dict.iteritems():
             if not isinstance(v, str):
                 cookie_dict[k] =  str(v)
@@ -95,14 +109,28 @@ class MimoRestClient:
                                              cookie_dict)
     
     def encode_url(self, url):
+        """Performs operation of encoding the URL and escape characters."""
         return urllib.quote_plus(url)
 
     def get_url(self, params, url):
+        """Performs operation to get URL."""
         params = urlencode(params)
         url = "%(url)s?"%{'url' : url} + params
         return url
 
     def POST_request(self, url, params, **kwargs):
+        """Performs operation of posting the request to the server in JSON format.
+            Args:
+                self: Current self class
+                url: URL where request needs to be posted
+                params: Request parameters to be posted.
+        
+            Returns:
+                JSON response received from the server
+        
+            Raises:
+                Exception: An error occurred while posting request or parsing response.
+        """
         kwargs = kwargs and kwargs or {}
         self.headers.update(kwargs.get("headers", {}))
         try:
@@ -118,6 +146,17 @@ class MimoRestClient:
             raise Exception(e)
 
     def GET_request(self, url, **kwargs):
+        """Performs operation of HTTP GET on the URL provided.
+            Args:
+                self: Current self class
+                url: URL where request needs to be posted
+           
+            Returns:
+                JSON response received from the server
+        
+            Raises:
+                Exception: An error occurred while posting request or parsing response.
+        """
         try:
             response = self.session.get(url)
 	    return self.parse_response(response)
@@ -126,6 +165,14 @@ class MimoRestClient:
             raise Exception(e)
 
     def parse_response(self, resp):
+        """Performs operation of parsing the HTTP Response.
+            Args:
+                self: Current self class
+                resp: HTTP Response object
+        
+            Returns:
+                JSON content received from the server
+        """
         content = {}
         if resp.content:
             if isinstance(resp.content, basestring):
@@ -138,6 +185,13 @@ class MimoRestClient:
         return content    
 
     def get_code_url(self, **kwargs):
+        """Performs operation of constructing the Authentication URL for MIMO Payment Gateway.
+            Args:
+                self: Current self class
+        
+            Returns:
+                String of Authentication URL for MIMO Payment Gateway
+        """
         data = {'client_id': self.client_id,
                 'response_type': "code"}
         data.update(kwargs)
@@ -145,6 +199,18 @@ class MimoRestClient:
         return self.authentication_url + params
 
     def request_oauth_token(self, code, **kwargs):
+        """Performs operation doing OATH with MIMO Payment Gateway. It also sets the cookies.
+            Args:
+                self: Current self class
+                code: Authentication code.
+           
+            Returns:
+                String HTTP response received from the server
+        
+            Raises:
+                NameError: If url or redirect_url varaible missing in kwargs input.
+                Exception: An error occurred while posting request or parsing response.
+        """
         if 'params' not in kwargs:
             raise NameError('params is missing in arguments (kwargs as dict)')
 #        if "code" not in kwargs["params"]:
@@ -163,6 +229,17 @@ class MimoRestClient:
 
 
     def search(self, **kwargs):
+        """Performs operation doing search by username,email,phone and account number with MIMO Payment Gateway.
+            Args:
+                self: Current self class
+          
+            Returns:
+                String JSON response received from the server
+        
+            Raises:
+                ValueError: If variables in input are empty.
+                Exception: An error occurred while posting request or parsing response.
+        """
         kwargs = kwargs and kwargs or {}
         if kwargs.keys() <= 1:
             raise ValueError('search value is missing in arguments (kwargs as dict)')
@@ -174,6 +251,18 @@ class MimoRestClient:
 
 
     def transfer_funds_endpoint(self, amount, notes, **kwargs):
+        """Performs operation doing transfer of funds with MIMO Payment Gateway.
+            Args:
+                self: Current self class
+                amount: Double amount to be transferred.
+                notes: String memo notes to be attached with this transfer
+          
+            Returns:
+                String JSON response received from the server
+        
+            Raises:
+                Exception: An error occurred while posting request or parsing response.
+        """
         kwargs = kwargs and kwargs or {}
         if "access_token" not in kwargs:
             kwargs.update({'access_token':self.get_session_cookies_dict().get("access_token", False)})
@@ -185,6 +274,18 @@ class MimoRestClient:
 
 
     def refund_endpoint(self, amount, notes, transaction_id=False, **kwargs):
+        """Performs operation doing refund of funds with MIMO Payment Gateway.
+            Args:
+                self: Current self class
+                amount: Double amount to be transferred.
+                notes: String memo notes to be attached with this transfer
+          
+            Returns:
+                String JSON response received from the server
+        
+            Raises:
+                Exception: An error occurred while posting request or parsing response.
+        """
         kwargs = kwargs and kwargs or {}
         if "access_token" not in kwargs:
             kwargs.update({'access_token':self.get_session_cookies_dict().get("access_token", False)})
@@ -199,6 +300,17 @@ class MimoRestClient:
         return response_content
 
     def transfer_voidfunds_endpoint(self, transaction_id=False, **kwargs):
+        """Performs operation doing voiding of transfer funds transaction which has not yet being completed with MIMO Payment Gateway.
+            Args:
+                self: Current self class
+                transaction_id: Integer transaction id to be voided.
+          
+            Returns:
+                String JSON response received from the server
+        
+            Raises:
+                Exception: An error occurred while posting request or parsing response.
+        """
         kwargs = kwargs and kwargs or {}
         if "access_token" not in kwargs:
             kwargs.update({'access_token':self.get_session_cookies_dict().get("access_token", False)})

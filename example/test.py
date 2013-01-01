@@ -37,6 +37,8 @@ from mimolib import MimoRestClient
 
 import urllib
 
+#Create the MimoRestClient class instance.
+
 mimo = MimoRestClient(
     'NfXwj_-nso1NYdpZ',
     'xv-lHx9FusqgBWbEWkjDSn5x',
@@ -45,12 +47,16 @@ mimo = MimoRestClient(
     token_url='oauth/v2/token', auth_params=("mimo", "mimo"),
     json_request=True)
 
+#Get the MIMO Authentication URL
 
 code_url = mimo.get_code_url(url="https://www.google.com/")
 print ("Open mimo Authorized url in browser ---",code_url)
 
 code = raw_input('Copy code from browser: ')
 data = dict(url=urllib.quote_plus("https://www.google.com/"))
+
+#Gets Authentication code from MIMO Payment Gateway .
+
 resp = mimo.request_oauth_token(code, params=data)
 print ("Mimo Access token key -----",resp)
 
