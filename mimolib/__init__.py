@@ -228,7 +228,7 @@ class MimoRestClient:
         return response_content
 
 
-    def search(self, **kwargs):
+    def search_user(self, **kwargs):
         """Performs operation doing search by username,email,phone and account number with MIMO Payment Gateway.
             Args:
                 self: Current self class
@@ -250,7 +250,7 @@ class MimoRestClient:
         return self.GET_request(url)
 
 
-    def transfer_funds_endpoint(self, amount, notes, **kwargs):
+    def transfer_funds(self, amount, notes, **kwargs):
         """Performs operation doing transfer of funds with MIMO Payment Gateway.
             Args:
                 self: Current self class
@@ -273,7 +273,7 @@ class MimoRestClient:
         return response_content
 
 
-    def refund_endpoint(self, amount, notes, transaction_id=False, **kwargs):
+    def refund_funds(self, amount, notes, transaction_id=False, **kwargs):
         """Performs operation doing refund of funds with MIMO Payment Gateway.
             Args:
                 self: Current self class
@@ -299,7 +299,7 @@ class MimoRestClient:
         self.set_cookies({"transaction_id":response_content.get("transaction_id")})
         return response_content
 
-    def transfer_voidfunds_endpoint(self, transaction_id=False, **kwargs):
+    def void_transfer(self, transaction_id=False, **kwargs):
         """Performs operation doing voiding of transfer funds transaction which has not yet being completed with MIMO Payment Gateway.
             Args:
                 self: Current self class

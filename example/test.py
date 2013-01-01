@@ -58,24 +58,24 @@ data = dict(url=urllib.quote_plus("https://www.google.com/"))
 #Gets Authentication code from MIMO Payment Gateway .
 
 resp = mimo.request_oauth_token(code, params=data)
-print ("Mimo Access token key -----",resp)
+print ("Mimo Access token key ===",resp)
 
 # Search
-search_resp = mimo.search(username="mimo-python")
-print ("search Response -----",search_resp)
+search_resp = mimo.search_user(username="mimo-python")
+print ("Search User Response ===",search_resp)
 
 # Transfer funds
-transfer_funds_resp = mimo.transfer_funds_endpoint(100.00, "transfer amount")
-print ("transfer_funds_resp===",transfer_funds_resp)
+transfer_funds_resp = mimo.transfer_funds(100.00, "transfer amount")
+print ("Transfer Funds Response===",transfer_funds_resp)
 
 
 # Refund endpoint
-refund_endpoint_resp = mimo.refund_endpoint(100.00, "refund amount", 12164)
-print ("refund_endpoint_resp===",refund_endpoint_resp)
+refund_endpoint_resp = mimo.refund_funds(100.00, "refund amount", 12164)
+print ("Refund Funds Response===",refund_endpoint_resp)
 
 # Void funds endpoint
-transfer_voidfunds_resp = mimo.transfer_voidfunds_endpoint(12166)
-print ("transfer_voidfunds_endpoint===",transfer_voidfunds_resp)
+transfer_voidfunds_resp = mimo.void_transfer(12166)
+print ("Void Transfer Funds Response===",transfer_voidfunds_resp)
 
 
 
