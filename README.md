@@ -16,15 +16,19 @@
 
 ## Usage
 ```
-
+Please look at test.py for sample usage.
 ```
 ## Examples / Quickstart
 
 This repo includes various usage examples, including:
 
 * Authenticating with OAuth and Request for the access Token [MimoRestClient.request_oauth_token]
-* Searching User [MimoRestClient.search]
-* Transfer Amount [MimoRestClient.transfer_funds_endpoint]
+* Searching User [MimoRestClient.search_user]
+* Transfer Funds [MimoRestClient.transfer_funds]
+* Refund Funds [MimoRestClient.refund_funds]
+* Void the Transfer Funds Transaction [MimoRestClient.void_transfer]
+* User Registration [MimoRestClient.register]
+
 
 ## Methods
 
