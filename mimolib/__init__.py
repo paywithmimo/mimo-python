@@ -70,7 +70,8 @@ class MimoRestClient:
                  search_url="/partner/user/card_id",
                  transfer_url="/partner/transfers", 
                  refund_url="/partner/refunds",
-                 void_endpoint_url="/partner/transfers/void",
+                 void_url="/partner/transfers/void",
+                 registration_url="partner/registration",
                  encoding="utf-8", **kwargs):
         """Inits SampleClass with client_id,client_secret,client_url and various 
            URL used for MIMO API."""
@@ -82,7 +83,8 @@ class MimoRestClient:
         self.search_url = client_url + search_url
         self.transfer_url = client_url + transfer_url
         self.refund_url = client_url+ refund_url 
-        self.void_endpoint_url = client_url+ void_endpoint_url
+        self.void_url = client_url+ void_url
+        self.registration_url = client_url+ registration_url
         self.headers = None
         self.auth_params = None
         self.json_request = False
@@ -318,5 +320,99 @@ class MimoRestClient:
         kwargs.update({"transaction_id":transaction_id and transaction_id or 	
 				self.get_session_cookies_dict().get("transaction_id", False)})
 
-        return self.POST_request(self.void_endpoint_url, kwargs)
+        return self.POST_request(self.void_url, kwargs)
 
+    def register(self, account_type,username,pin,email,password,challenge_question,
+                 challenge_answer,terms_and_conditions,address,address_2,dob,city,state,zipcode,country,address_type,
+                 first_name,middle_name,surname,gender,about,website,facebook,twitter,company_name,company_id_number,rc_incorporation_year,mobile_phone,
+                 **kwargs):
+        """Performs operation of registering user with MIMO Payment Gateway.
+            Args:
+                self: Current self class
+                account_type :  Account type .Valid values are 'personal' || 'merchant'
+                username : User name to be used.
+                pin : Pin no. 
+                email : Email address to be used.
+                password : Password for login
+                challenge_question : The question used for forgot password. Valid values are 
+                                        1. What is your favourite book?
+                                        2. What is your favourite TV show?
+                                        3. What is your favourite colour?
+                                        4. What is your best friend's first name?
+                                        5. What is your favourite pet's name?
+                                        6. What is your favourite food?
+                challenge_answer : Answers to the questions.
+                terms_and_conditions : Flag indicating user accepts terms and conditions. Valid values are 0 or 1
+                address : Address line 1
+                address_2  : Address line 2
+                dob :  Date of Birth  in format MM/dd/yyyy e.g. 12/12/1985
+                city : City 
+                state : State
+                zipcode : Zip code
+                country : Country
+                address_type :  Address type . Valid values are'home' || 'business' || 'mailing'
+                first_name : First name
+                middle_name : Middle name
+                surname : Sir name
+                gender : Gender
+                about : About.
+                website : Company website e.g. http://www.site.com
+                facebook : Facebook url e.g. http://www.site.com
+                twitter : Twitter link e.g.@test
+                company_name : Company name
+                company_id_number : Company id number
+                rc_incorporation_year : Year in which company incorporated e.g. 1912
+                mobile_phone: Mobile phone no. required.
+          
+            Returns:
+                String JSON response received from the server.
+                If required variables in input are empty then response will have error.
+                              Account Type
+                              UserName
+                              Pin
+                              Email Address
+                              DOB
+                              Password
+                              Security Question
+                              Terms & Conditions.
+                              Company Name
+                              RC Number
+                              Year of Incorporation
+                              Mobile Phone No.
+        
+                 Exception: An error occurred while posting request or parsing response.
+        """
+        
+        data = {'client_id':self.client_id,
+                'client_secret':self.client_secret,
+                'account_type':account_type,
+                        'username':username,
+                        'pin':pin,
+                        'email':email,
+                        'password':password,
+                        'challenge_question':challenge_question,
+                        'challenge_answer':challenge_answer,
+                        'terms_and_conditions':terms_and_conditions,
+                        'address':address,
+                        'address_2':address_2,
+                        'dob':dob,
+                        'city':city,
+                        'state':state,
+                        'zip':zipcode,
+                        'country':country,
+                        'address_type':address_type,
+                        'first_name':first_name,
+                        'middle_name':middle_name,
+                        'gender':gender,
+                        'about':about,
+                        'website':website,
+                        'facebook':facebook,
+                        'twitter':twitter,
+                        'company_name':company_name,
+                        'company_id_number':company_id_number,
+                        'rc_incorporation_year':rc_incorporation_year,
+                        'mobile_phone':mobile_phone}
+        params = '?' + urlencode(data)
+
+
+        return self.POST_request(self.registration_url+params, kwargs)

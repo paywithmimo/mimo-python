@@ -60,22 +60,25 @@ data = dict(url=urllib.quote_plus("https://www.google.com/"))
 resp = mimo.request_oauth_token(code, params=data)
 print ("Mimo Access token key ===",resp)
 
-# Search
+# Registration
+#registration_response = mimo.register("personal", "jamesjoesz", "2313", "jamesjoesz@test.com", "A1awerwewe", "What is your favourite book?", 
+#                                      "holiday", "1", "123 james place. ", "jackson street.", "12/10/1965","Lagos", "lg", "123123123", "Nigeria", "home",
+#                                       "James", "", "Joesz", "Male", "About me", "http://www.site.com", "http://www.facebook.com/abc","@ackwk", "James Joesz", "123213", "1945","03423423423")
+#print ("Registration api Response ===",registration_response)
+
+#Search
 search_resp = mimo.search_user(username="mimo-python")
 print ("Search User Response ===",search_resp)
-
-# Transfer funds
+ 
+#Transfer funds
 transfer_funds_resp = mimo.transfer_funds(100.00, "transfer amount")
 print ("Transfer Funds Response===",transfer_funds_resp)
-
-
-# Refund endpoint
+ 
+ 
+#Refund endpoint
 refund_endpoint_resp = mimo.refund_funds(100.00, "refund amount", 12164)
 print ("Refund Funds Response===",refund_endpoint_resp)
 
-# Void funds endpoint
+#Void funds endpoint
 transfer_voidfunds_resp = mimo.void_transfer(12166)
 print ("Void Transfer Funds Response===",transfer_voidfunds_resp)
-
-
-
